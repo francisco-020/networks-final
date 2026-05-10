@@ -74,7 +74,17 @@ def listen_for_response(player_index, client_socket):
     except ConnectionResetError:
         log(f"{player_names[player_index]} disconnected unexpectedly.")
 
+def get_lan_ip():
+    temp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try: 
+        temp_socket.connect(("8.8.8.8", 80))
+        ip = temp_socket.getsockname()[0]
+    finally:
+        temp_socket.close()
+    return ip
 
+log(f"Server Lan IP: {get_lan_ip()}")
+log(f"Players should connect to {get_lan_ip()}:{PORT}")
 log("Server is running...")
 log(f"Waiting for 2 clients on port {PORT}...")
 

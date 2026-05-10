@@ -3,7 +3,7 @@ import threading
 import tkinter as tk
 from tkinter import simpledialog, messagebox, ttk
 
-HOST = "127.0.0.1"
+HOST = None
 PORT = 5050
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -80,6 +80,15 @@ subtitle_label = tk.Label(
     fg=MUTED_TEXT
 )
 subtitle_label.pack(pady=(0, 15))
+
+server_label = tk.Label(
+    root,
+    text=f"Server: {HOST}:{PORT}",
+    font=("Arial", 10),
+    bg=BG_COLOR,
+    fg=MUTED_TEXT
+)
+server_label.pack(pady=(0, 10))
 
 main_status = tk.Label(
     root,
@@ -215,6 +224,17 @@ def listen_to_server():
 
 
 def connect_to_server():
+    global HOST
+
+    HOST = simpledialog.askstring("Server IP", "Enter the server LAN IP")
+
+    if not HOST:
+        messagebox.showerror("Error", "Server IP is required.")
+        root.destroy()
+        return
+    
+    server_label.config(text=f"Server: {HOST}:{PORT}")
+
     name = simpledialog.askstring("Player Name", "Enter your name:")
 
     if not name:
